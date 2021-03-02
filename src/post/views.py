@@ -27,6 +27,12 @@ class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = 'post_id'
     queryset = Post.objects.all()
     serializer_class = PostUpdateDeleteSerializer
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsPostMineOrReadOnly,
+    )
+
+
 class CommentCreate(CreateAPIViewWithoutSerializer):
     serializer_class = CommentListSerializer
     schema = {'post_id': {'regex': '^[0-9]+$'},
