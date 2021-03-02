@@ -9,19 +9,39 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'profile_image']
 
 
+class CommentListSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'user', 'body', 'parent']
+
+
+class CommentDetailSerializer(serializers.ModelSerializer):
+    children = CommentListSerializer(many=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'user', 'body', 'children']
+
+
 class PostListCreateSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField()
+    user = UserSerializer()
+    comments = CommentListSerializer(many=True, source='two_comments')
 
     class Meta:
         model = Post
-        fields = ['user_id', 'id', 'created_at', 'like_count', 'body']
+        fields = ['user', 'id', 'created_at', 'like_count', 'body', 'image', 'comments']
         extra_kwargs = {
-            'body': {'write_only': True}
+            'body': {'write_only': True},
+            'comments': {'read_only': True},
         }
 
 
 class PostUpdateDeleteSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    comment = CommentDetailSerializer(many=True, source='all_comments')
+
     class Meta:
         model = Post
         fields = ['user', 'body', 'created_at', 'like_count', 'image', 'comment']
