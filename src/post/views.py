@@ -1,40 +1,45 @@
-"""
-API 클래스를 2개 만들기
- - Post List API (Serializer)
-    - user_id
-    - created_at
-    - like_counts
- - Post Create API
-    - user_id
-    - body
-    - 생성 후 Detail 과 동일한 리턴
- - Post Detail API (Serializer)
-    - user_id
-    - body
-    - created_at
-    - like_counts
- - Post Update API
-    - body 받아서 수정 후 Detail 과 동일한 리턴
- - Post Delete API
-    - post_id 에 해당하는 값 제거
-"""
-
+from cerberus import Validator
 from rest_framework import generics
-from post.models import Post
-from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerializer
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from post.base_api import CreateAPIViewWithoutSerializer
+from post.models import Post, Comment
+from post.permissions import IsPostMineOrReadOnly, IsCommentMineOrReadOnly
+from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerializer, CommentListSerializer
 
 
-class PostListCreate(generics.ListCreateAPIView):
+class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
     queryset = Post.objects.all()
     serializer_class = PostListCreateSerializer
+    schema = {'body': {'type': 'string'},
+              'image': {'type': 'file'}}
+    class_to_create_object = Post
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+    )
 
 
 class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'post_id'
-
     queryset = Post.objects.all()
     serializer_class = PostUpdateDeleteSerializer
+class CommentCreate(CreateAPIViewWithoutSerializer):
+    serializer_class = CommentListSerializer
+    schema = {'post_id': {'regex': '^[0-9]+$'},
+              'parent_id': {'regex': '^[0-9]+$', 'nullable': True},
+              'body': {'type': 'string'}}
+    class_to_create_object = Comment
+
+    def check_validation(self, validator, **data):
+        if data['parent_id']:
+            data['post_id'] = Comment.objects.get(id=data['parent_id']).post_id
+        super().check_validation(validator, **data)
+
+
 class CommentDelete(generics.DestroyAPIView):
     serializer_class = CommentListSerializer
     queryset = Comment.objects.all()
