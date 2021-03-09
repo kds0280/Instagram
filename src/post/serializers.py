@@ -31,7 +31,7 @@ class PostListCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['user', 'id', 'created_at', 'like_count', 'body', 'image', 'comments']
+        fields = ['user', 'id', 'created_at', 'body', 'image', 'comments']
         extra_kwargs = {
             'body': {'write_only': True},
             'comments': {'read_only': True},
@@ -44,8 +44,7 @@ class PostUpdateDeleteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['user', 'body', 'created_at', 'like_count', 'image', 'comment']
+        fields = ['user', 'body', 'created_at', 'image', 'comment']
         extra_kwargs = {
-            'like_count': {'read_only': True},
             'image': {'read_only': True}
         }
