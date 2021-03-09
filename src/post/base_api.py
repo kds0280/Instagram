@@ -11,15 +11,18 @@ class CreateAPIViewWithoutSerializer(generics.CreateAPIView):
     class_to_create_object = None
 
     def create(self, request, *args, **kwargs):
-        schema = self.schema
-        validator = MyValidator(schema)
         data = request.data.dict()
-        data = self.check_validation(validator, **data)
-        instance = self.class_to_create_object.objects.create(**data, user=request.user)
+        isvalid_data = self.check_validation(**data)
+        instance = self.create_instance(request, **isvalid_data)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    def check_validation(self, validator, **data):
+    def check_validation(self, **data):
+        schema = self.schema
+        validator = MyValidator(schema)
         if not validator.validate(data):
             raise ValidationError
         return data
+
+    def create_instance(self, request, **isvalid_data):
+        return self.class_to_create_object.objects.create(**isvalid_data)
