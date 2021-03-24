@@ -28,8 +28,15 @@ class Login(APIView):
             raise exceptions.ValidationError('비밀번호가 틀렸습니다.')
 
 
-class SignUp(generics.CreateAPIView):
-    queryset = User.objects.all()
+class SignUp(CreateAPIViewWithoutSerializer):
+    schema = {'username': {'type': 'string', 'maxlength': 150, 'empty': False},
+              'password': {'type': 'string', 'maxlength': 128, 'empty': False},
+              'phone_number': {'type': 'string', 'maxlength': 13, 'empty': False},
+              'email': {'type': 'string', 'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+                        'maxlength': 254, 'empty': False},
+              'description': {'type': 'string'},
+              'profile_image': {'type': 'file', 'nullable': True}}
+    class_to_create_object = User
     serializer_class = SignUpSerializer
 
     def create_instance(self, request, **data_is_valid):

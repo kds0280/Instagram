@@ -36,9 +36,9 @@ class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
 
 class CommentCreate(CreateAPIViewWithoutSerializer):
     serializer_class = CommentListSerializer
-    schema = {'post_id': {'regex': '^[0-9]+$'},
-              'parent_id': {'regex': '^[0-9]+$', 'nullable': True},
-              'body': {'type': 'string'}}
+    schema = {'post_id': {'type': 'string', 'regex': '^[0-9]+$'},
+              'parent_id': {'type': 'string', 'regex': '^[0-9]+$', 'empty': True},
+              'body': {'type': 'string', 'empty': False}}
     class_to_create_object = Comment
 
     def create_instance(self, request, **isvalid_data):
