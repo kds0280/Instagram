@@ -10,6 +10,9 @@ file_type = cerberus.TypeDefinition('file', (InMemoryUploadedFile,), ())
 def check_validation(schema, **data):
     validator = MyValidator(schema, error_handler=BasicErrorHandler)
     if not validator.validate(data):
+        error_message = ''
+        for key, value in validator.errors.items():
+            error_message = error_message + key + ' causes an error : ' + value[0] + '   '
         raise ValidationError(error_message)
     return data
 
