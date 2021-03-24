@@ -1,13 +1,11 @@
-from cerberus import Validator
 from rest_framework import generics
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
+from my_validator import check_validation
 from post.base_api import CreateAPIViewWithoutSerializer
 from post.models import Post, Comment
-from post.permissions import IsPostMineOrReadOnly, IsCommentMineOrReadOnly
+from post.permissions import IsObjectMineOrReadOnly
 from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerializer, CommentListSerializer
 
 
@@ -20,6 +18,9 @@ class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
     permission_classes = (
         IsAuthenticatedOrReadOnly,
     )
+
+    def create_instance(self, request, **isvalid_data):
+        return self.class_to_create_object.objects.create(**isvalid_data, user=request.user)
 
 
 class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
@@ -40,10 +41,10 @@ class CommentCreate(CreateAPIViewWithoutSerializer):
               'body': {'type': 'string'}}
     class_to_create_object = Comment
 
-    def check_validation(self, validator, **data):
-        if data['parent_id']:
-            data['post_id'] = Comment.objects.get(id=data['parent_id']).post_id
-        super().check_validation(validator, **data)
+    def create_instance(self, request, **isvalid_data):
+        if isvalid_data['parent_id']:
+            isvalid_data['post_id'] = Comment.objects.get(id=isvalid_data['parent_id']).post_id
+        return self.class_to_create_object.objects.create(**isvalid_data, user=request.user)
 
 
 class CommentDelete(generics.DestroyAPIView):
