@@ -17,6 +17,9 @@ class Post(models.Model):
     def all_comments(self):
         return self.comments.filter(parent__isnull=True)
 
+    def count_like(self):
+        return self.like_users.count()
+
 
 class Comment(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.CASCADE)
