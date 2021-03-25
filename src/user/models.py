@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 
+from post.models import Post
+
 
 def profile_upload_to(instance, filename):
     return 'user/{}/profile/{}'.format(instance.id, filename)
@@ -22,3 +24,6 @@ class User(AbstractBaseUser):
 
     def count_followers(self):
         return self.followers.count()
+
+    def count_posts(self):
+        return Post.objects.filter(user=self.id).count()
