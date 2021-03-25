@@ -14,6 +14,7 @@ urlpatterns = [
     path('auth', Login.as_view()),
     path('signup', SignUp.as_view()),
     path('user/<int:user_id>', UserUpdate.as_view()),
+    path('user/<int:user_id>/follow', UserFollow.as_view()),
     path('comment', CommentCreate.as_view()),
     path('comment/<int:comment_id>', CommentDelete.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -54,3 +54,18 @@ class UserUpdate(generics.UpdateAPIView):
     permission_classes = (
         IsUserMineOrReadOnly,
     )
+
+
+class UserFollow(generics.UpdateAPIView):
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+    )
+
+    def patch(self, request, *args, **kwargs):
+        if request.user.followings.filter(id=kwargs['user_id']).first():
+            request.user.followings.remove(kwargs['user_id'])
+            return Response(False)
+        else:
+            request.user.followings.add(kwargs['user_id'])
+            return Response(True)
+
