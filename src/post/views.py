@@ -30,7 +30,7 @@ class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostUpdateDeleteSerializer
     permission_classes = (
         IsAuthenticatedOrReadOnly,
-        IsPostMineOrReadOnly,
+        IsObjectMineOrReadOnly,
     )
 
 
@@ -53,5 +53,5 @@ class CommentDelete(generics.DestroyAPIView):
     lookup_url_kwarg = 'comment_id'
     lookup_field = 'id'
     permission_classes = (
-        IsCommentMineOrReadOnly,
+        IsObjectMineOrReadOnly,
     )
