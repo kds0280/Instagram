@@ -27,7 +27,8 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 
 class PostListCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    comments = CommentListSerializer(many=True, source='two_comments')
+    comments = CommentListSerializer(many=True, source='get_two_comments')
+    number_of_like = serializers.IntegerField(source='count_like')
 
     class Meta:
         model = Post
@@ -40,7 +41,8 @@ class PostListCreateSerializer(serializers.ModelSerializer):
 
 class PostUpdateDeleteSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    comment = CommentDetailSerializer(many=True, source='all_comments')
+    comment = CommentDetailSerializer(many=True, source='get_all_comments')
+    number_of_like = serializers.IntegerField(source='count_like')
 
     class Meta:
         model = Post

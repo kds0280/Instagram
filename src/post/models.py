@@ -11,10 +11,10 @@ class Post(models.Model):
     image = models.ImageField(upload_to=user_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def two_comments(self):
+    def get_two_comments(self):
         return self.comments.filter(parent__isnull=True)[:2]
 
-    def all_comments(self):
+    def get_all_comments(self):
         return self.comments.filter(parent__isnull=True)
 
     def count_like(self):
