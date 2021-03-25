@@ -16,3 +16,9 @@ class User(AbstractBaseUser):
     profile_image = models.ImageField(upload_to=profile_upload_to, null=True)
 
     USERNAME_FIELD = 'username'
+
+    def count_followings(self):
+        return self.followings.count()
+
+    def count_followers(self):
+        return self.followers.count()

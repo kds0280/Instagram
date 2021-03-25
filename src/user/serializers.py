@@ -23,3 +23,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'username': {'read_only': True},
         }
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    followings_count = serializers.IntegerField(source='count_followings')
+    followers_count = serializers.IntegerField(source='count_followers')
+    posts_count = serializers.IntegerField(source='count_posts')
+
+    class Meta:
+        model = User
+        fields = ['profile_image', 'username', 'description', 'followings_count', 'followers_count', 'posts_count']
+
