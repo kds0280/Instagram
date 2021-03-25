@@ -4,10 +4,11 @@ from django.contrib import admin
 from django.urls import path
 
 from post.views import PostListCreate, PostDetailUpdateDelete, CommentCreate, CommentDelete, PostLike
-from user.views import Login, SignUp, UserUpdate
+from user.views import Login, SignUp, UserUpdate, UserFollow, UserProfile, Search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('search', Search.as_view()),
     path('post', PostListCreate.as_view()),
     path('post/<int:post_id>', PostDetailUpdateDelete.as_view()),
     path('post/<int:post_id>/like', PostLike.as_view()),

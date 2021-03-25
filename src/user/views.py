@@ -76,3 +76,12 @@ class UserProfile(generics.RetrieveAPIView):
     lookup_field = 'id'
     serializer_class = UserProfileSerializer
 
+
+class Search(generics.RetrieveAPIView):
+    serializer_class = SearchSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data.dict()
+        queryset = User.objects.filter(username__contains=data['body'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
