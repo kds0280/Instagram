@@ -34,3 +34,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['profile_image', 'username', 'description', 'followings_count', 'followers_count', 'posts_count']
 
+
+class SearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['profile_image', 'username']
