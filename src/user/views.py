@@ -69,3 +69,10 @@ class UserFollow(generics.UpdateAPIView):
             request.user.followings.add(kwargs['user_id'])
             return Response(True)
 
+
+class UserProfile(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    lookup_url_kwarg = 'user_id'
+    lookup_field = 'id'
+    serializer_class = UserProfileSerializer
+
