@@ -62,7 +62,7 @@ class UserFollow(generics.UpdateAPIView):
     )
 
     def patch(self, request, *args, **kwargs):
-        if request.user.followings.filter(id=kwargs['user_id']).first():
+        if request.user.followings.filter(id=kwargs['user_id']).exists():
             request.user.followings.remove(kwargs['user_id'])
             result = {'result': False}
             return Response(result)
