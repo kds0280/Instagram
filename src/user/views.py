@@ -64,10 +64,12 @@ class UserFollow(generics.UpdateAPIView):
     def patch(self, request, *args, **kwargs):
         if request.user.followings.filter(id=kwargs['user_id']).first():
             request.user.followings.remove(kwargs['user_id'])
-            return Response(False)
+            result = {'result': False}
+            return Response(result)
         else:
             request.user.followings.add(kwargs['user_id'])
-            return Response(True)
+            result = {'result': True}
+            return Response(result)
 
 
 class UserProfile(generics.RetrieveAPIView):

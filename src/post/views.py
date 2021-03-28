@@ -65,7 +65,9 @@ class PostLike(generics.GenericAPIView):
     def patch(self, request, *args, **kwargs):
         if Post.objects.filter(id=kwargs['post_id'], like_users=request.user.id).first():
             request.user.like_posts.remove(kwargs['post_id'])
-            return Response(False)
+            result = {'result': False}
+            return Response(result)
         else:
             request.user.like_posts.add(kwargs['post_id'])
-            return Response(True)
+            result = {'result': True}
+            return Response(result)
