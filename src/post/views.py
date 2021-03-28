@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 
 from my_validator import check_validation
@@ -59,7 +59,7 @@ class CommentDelete(generics.DestroyAPIView):
 
 class PostLike(generics.GenericAPIView):
     permission_classes = (
-        IsAuthenticatedOrReadOnly,
+        IsAuthenticated,
     )
 
     def patch(self, request, *args, **kwargs):
