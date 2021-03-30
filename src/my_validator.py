@@ -21,7 +21,7 @@ error_field_list = {
 
 
 def check_validation(schema, **data):
-    validator = MyValidator(schema, error_handler=BasicErrorHandler)
+    validator = MyValidator(schema, error_handler=CustomErrorHandler)
     if not validator.validate(data):
         error_message = ''
         for key, value in validator.errors.items():
@@ -36,3 +36,9 @@ class MyValidator(Validator):
     types_mapping = Validator.types_mapping.copy()
     types_mapping['file'] = file_type
 
+
+class CustomErrorHandler(errors.BasicErrorHandler):
+    messages = errors.BasicErrorHandler.messages.copy()
+    messages[errors.BAD_TYPE.code] = '은 이미지 파일이어야 합니다.'
+    messages[errors.REGEX_MISMATCH.code] = '가 규격에 맞지 않습니다.'
+    messages[errors.EMPTY_NOT_ALLOWED.code] = '가 비어있습니다.'

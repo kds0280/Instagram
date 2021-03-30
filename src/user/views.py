@@ -1,4 +1,3 @@
-from cerberus.errors import BasicErrorHandler
 from rest_framework import exceptions, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import get_object_or_404
