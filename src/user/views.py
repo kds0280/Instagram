@@ -38,14 +38,6 @@ class SignUp(CreateAPIViewWithoutSerializer):
     class_to_create_object = User
     serializer_class = SignUpSerializer
 
-    # def create_instance(self, request, **data_is_valid):
-    #     instance = self.class_to_create_object(**data_is_valid)
-    #     instance.save()
-    #     instance = self.class_to_create_object.objects.create(**data_is_valid)
-    #     instance.set_password(data_is_valid['password'])
-    #     instance.save()
-    #     return instance
-
 
 class UserUpdate(generics.UpdateAPIView):
     queryset = User.objects.all()
