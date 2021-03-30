@@ -12,8 +12,8 @@ from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerialize
 class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
     queryset = Post.objects.all()
     serializer_class = PostListCreateSerializer
-    schema = {'post_body': {'type': 'string'},
-              'post_image': {'type': 'file', 'nullable': False}}
+    schema = {'body': {'type': 'string'},
+              'image': {'type': 'file'}}
     class_to_create_object = Post
     permission_classes = (
         IsAuthenticatedOrReadOnly,
@@ -38,11 +38,10 @@ class CommentCreate(CreateAPIViewWithoutSerializer):
     serializer_class = CommentListSerializer
     schema = {'post_id': {'type': 'string', 'regex': '^[0-9]+$'},
               'parent_id': {'type': 'string', 'regex': '^[0-9]+$', 'empty': True},
-              'comment_body': {'type': 'string', 'empty': False}}
+              'body': {'type': 'string', 'empty': False}}
     class_to_create_object = Comment
 
     def create_instance(self, request, **isvalid_data):
-        isvalid_data['body'] = isvalid_data.pop('comment_body')
         if isvalid_data['parent_id']:
             isvalid_data['post_id'] = Comment.objects.get(id=isvalid_data['parent_id']).post_id
         return self.class_to_create_object.objects.create(**isvalid_data, user=request.user)
