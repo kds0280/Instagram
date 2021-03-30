@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from my_validator import MyValidator, check_validation
+from my_validator import check_validation
 from post.base_api import CreateAPIViewWithoutSerializer
 from user.models import User
 from user.permissions import IsUserMineOrReadOnly
@@ -38,14 +38,6 @@ class SignUp(CreateAPIViewWithoutSerializer):
               'profile_image': {'type': 'file', 'nullable': True}}
     class_to_create_object = User
     serializer_class = SignUpSerializer
-
-    # def create_instance(self, request, **data_is_valid):
-    #     instance = self.class_to_create_object(**data_is_valid)
-    #     instance.save()
-    #     instance = self.class_to_create_object.objects.create(**data_is_valid)
-    #     instance.set_password(data_is_valid['password'])
-    #     instance.save()
-    #     return instance
 
 
 class UserUpdate(generics.UpdateAPIView):
