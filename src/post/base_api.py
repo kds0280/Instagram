@@ -20,3 +20,15 @@ class CreateAPIViewWithoutSerializer(generics.CreateAPIView):
 
     def create_instance(self, request, **data_is_valid):
         return self.class_to_create_object.objects.create(**data_is_valid)
+
+
+class UpdateAPIViewWithoutSerializer(generics.UpdateAPIView):
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        data = request.data.dict()
+        data_is_valid = check_validation(self.schema, **data)
+        instance = self.get_object()
+        data_is_valid['body'] = data_is_valid.pop('post_body')
+        instance.save(data_is_valid)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

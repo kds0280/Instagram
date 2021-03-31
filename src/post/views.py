@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework.response import Response
 
 from my_validator import check_validation
-from post.base_api import CreateAPIViewWithoutSerializer
+from post.base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
 from post.models import Post, Comment
 from post.permissions import IsObjectMineOrReadOnly
 from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerializer, CommentListSerializer
@@ -23,7 +23,9 @@ class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
         return self.class_to_create_object.objects.create(**isvalid_data, user=request.user)
 
 
-class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+class PostDetailUpdateDelete(generics.RetrieveDestroyAPIView, UpdateAPIViewWithoutSerializer):
+    schema = {'post_body': {'type': 'string'},
+              'post_image': {'type': 'file', 'nullable': False}}
     lookup_field = 'id'
     lookup_url_kwarg = 'post_id'
     queryset = Post.objects.all()
