@@ -24,7 +24,6 @@ class CreateAPIViewWithoutSerializer(generics.CreateAPIView):
 
 class UpdateAPIViewWithoutSerializer(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
         data = request.data.dict()
         data_is_valid = check_validation(self.schema, **data)
         instance = self.get_object()
@@ -33,3 +32,6 @@ class UpdateAPIViewWithoutSerializer(generics.UpdateAPIView):
             setattr(instance, key, value)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
