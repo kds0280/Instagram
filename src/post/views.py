@@ -38,14 +38,14 @@ class PostDetailUpdateDelete(generics.RetrieveDestroyAPIView, UpdateAPIViewWitho
 
 class CommentCreate(CreateAPIViewWithoutSerializer):
     serializer_class = CommentListSerializer
-    schema = {'post_id': {'type': 'string', 'regex': '^[0-9]+$'},
-              'parent_id': {'type': 'string', 'regex': '^[0-9]+$', 'empty': True},
+    schema = {'post_id': {'type': 'integer', 'excludes': 'parent_id', 'required': True},
+              'parent_id': {'type': 'integer', 'excludes': 'post_id', 'required': True},
               'comment_body': {'type': 'string', 'empty': False}}
     class_to_create_object = Comment
 
     def create_instance(self, request, **isvalid_data):
         isvalid_data['body'] = isvalid_data.pop('comment_body')
-        if isvalid_data['parent_id']:
+        if 'parent_id' in isvalid_data:
             isvalid_data['post_id'] = Comment.objects.get(id=isvalid_data['parent_id']).post_id
         return self.class_to_create_object.objects.create(**isvalid_data, user=request.user)
 
