@@ -2,8 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 
-from my_validator import check_validation
-from post.base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
+from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
 from post.models import Post, Comment
 from post.permissions import IsObjectMineOrReadOnly
 from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerializer, CommentListSerializer
@@ -12,8 +11,8 @@ from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerialize
 class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
     queryset = Post.objects.all()
     serializer_class = PostListCreateSerializer
-    schema = {'post_body': {'type': 'string'},
-              'post_image': {'type': 'file', 'nullable': False}}
+    schema = {'body': {'type': 'string'},
+              'image': {'type': 'file', 'nullable': False}}
     class_to_create_object = Post
     permission_classes = (
         IsAuthenticatedOrReadOnly,
@@ -24,8 +23,8 @@ class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
 
 
 class PostDetailUpdateDelete(generics.RetrieveDestroyAPIView, UpdateAPIViewWithoutSerializer):
-    schema = {'post_body': {'type': 'string'},
-              'post_image': {'type': 'file', 'nullable': False}}
+    schema = {'body': {'type': 'string'},
+              'image': {'type': 'file', 'nullable': False}}
     lookup_field = 'id'
     lookup_url_kwarg = 'post_id'
     queryset = Post.objects.all()
@@ -40,11 +39,10 @@ class CommentCreate(CreateAPIViewWithoutSerializer):
     serializer_class = CommentListSerializer
     schema = {'post_id': {'type': 'integer', 'excludes': 'parent_id', 'required': True},
               'parent_id': {'type': 'integer', 'excludes': 'post_id', 'required': True},
-              'comment_body': {'type': 'string', 'empty': False}}
+              'body': {'type': 'string', 'empty': False}}
     class_to_create_object = Comment
 
     def create_instance(self, request, **isvalid_data):
-        isvalid_data['body'] = isvalid_data.pop('comment_body')
         if 'parent_id' in isvalid_data:
             isvalid_data['post_id'] = Comment.objects.get(id=isvalid_data['parent_id']).post_id
         return self.class_to_create_object.objects.create(**isvalid_data, user=request.user)
