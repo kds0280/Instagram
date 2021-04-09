@@ -27,9 +27,9 @@ class UpdateAPIViewWithoutSerializer(generics.UpdateAPIView):
         data = request.data.dict()
         data_is_valid = check_validation(self.schema, **data)
         instance = self.get_object()
-        data_is_valid['body'] = data_is_valid.pop('post_body')
         for key, value in data_is_valid.items():
             setattr(instance, key, value)
+        instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
