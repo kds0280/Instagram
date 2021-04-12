@@ -39,7 +39,12 @@ class SignUp(CreateAPIViewWithoutSerializer):
     serializer_class = SignUpSerializer
 
 
-class UserUpdate(generics.UpdateAPIView):
+class UserUpdate(UpdateAPIViewWithoutSerializer):
+    schema = {'phone_number': {'type': 'string', 'maxlength': 13, 'empty': False},
+              'email': {'type': 'string', 'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+                        'maxlength': 254, 'empty': False},
+              'description': {'type': 'string'},
+              'profile_image': {'type': 'file', 'nullable': True}}
     queryset = User.objects.all()
     lookup_url_kwarg = 'user_id'
     lookup_field = 'id'
