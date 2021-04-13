@@ -8,7 +8,10 @@ class CreateAPIViewWithoutSerializer(generics.CreateAPIView):
     class_to_create_object = None
 
     def create(self, request, *args, **kwargs):
-        data = request.data
+        if isinstance(request.data, dict):
+            data = request.data
+        else:
+            data = request.data.dict()
         data_is_valid = check_validation(self.schema, **data)
         instance = self.create_instance(request, **data_is_valid)
         serializer = self.serialize_instance(instance)
