@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from my_validator import check_validation
-from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
+from my_validator import MyValidator, check_validation
+from post.base_api import CreateAPIViewWithoutSerializer
 from user.models import User
 from user.permissions import IsUserMineOrReadOnly
 from user.serializers import SignUpSerializer, UserUpdateSerializer, UserProfileSerializer, SearchSerializer
@@ -54,7 +54,7 @@ class UserUpdate(UpdateAPIViewWithoutSerializer):
     )
 
 
-class UserFollow(UpdateAPIViewWithoutSerializer):
+class UserFollow(generics.UpdateAPIView):
     permission_classes = (
         IsAuthenticatedOrReadOnly,
     )
