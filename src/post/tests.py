@@ -1,4 +1,6 @@
 from rest_framework.test import APITestCase
+
+from post.models import Post
 from user.models import User
 
 
@@ -47,6 +49,16 @@ class UserModelTestCase(APITestCase):
         user = User.objects.get(id=1)
         field_label = user._meta.get_field('like_posts').verbose_name
         self.assertEqual(field_label, 'like posts')
+
+    def test_like_posts_relate(self):
+        user = User.objects.get(id=1)
+        post = user.like_posts.create(user=user)
+        self.assertEqual(user.like_posts.get(id=post.id), post)
+
+    def test_like_posts_related_name(self):
+        user = User.objects.get(id=1)
+        post = user.like_posts.create(user=user)
+        self.assertEqual(user.like_posts.get(id=post.id), post)
 
     def test_like_followings_label(self):
         user = User.objects.get(id=1)
