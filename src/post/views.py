@@ -1,17 +1,14 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
-from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer, ListAPIViewforDictionary
+from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
 from post.models import Post, Comment
 from post.permissions import IsObjectMineOrReadOnly
 from post.serializers import PostListCreateSerializer, PostUpdateDeleteSerializer, CommentListSerializer
 
 
-class PostListCreate(ListAPIViewforDictionary, CreateAPIViewWithoutSerializer):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'post/base.html'
+class PostListCreate(generics.ListAPIView, CreateAPIViewWithoutSerializer):
     queryset = Post.objects.all()
     serializer_class = PostListCreateSerializer
     schema = {'body': {'type': 'string'},
