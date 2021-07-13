@@ -2,15 +2,15 @@ from rest_framework import exceptions, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from my_validator import check_validation
-from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
+from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer, RetriveAPIViewForDictionary
 from user.models import User
 from user.permissions import IsUserMineOrReadOnly
 from user.serializers import SignUpSerializer, UserUpdateSerializer, UserProfileSerializer, SearchSerializer
-
 
 class Login(APIView):
     def post(self, request):
@@ -70,7 +70,9 @@ class UserFollow(UpdateAPIViewWithoutSerializer):
             return Response(result)
 
 
-class UserProfile(generics.RetrieveAPIView):
+class UserProfile(RetriveAPIViewForDictionary):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'user/templates.html'
     queryset = User.objects.all()
     lookup_url_kwarg = 'user_id'
     lookup_field = 'id'
