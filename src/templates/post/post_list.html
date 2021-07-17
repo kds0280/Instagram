@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block head %}
+    <style>
+        .profile_image {
+            width: 40px;
+            height: 40px;
+        }
+
+        .post_image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .center {
+            float: none;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% for post in serializer %}
+        <div class="card">
+            <div class="card-header">
+                <img src="{{ post.user.profile_image }}" class="card-img-top profile_image" alt="...">
+                {{ post.user.username }}
+            </div>
+            <div class="card-body center">
+                <img src="{{ post.image }}" class="card-img-top post_image" alt="...">
+            </div>
+            <div class="card-footer">
+                {{ post.number_of_like }}명이 좋아합니다.
+                {% for comment in post.comments %}
+                    <div>
+                        {{ comment.user.username }}{{ comment.body }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
