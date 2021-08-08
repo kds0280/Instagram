@@ -1,10 +1,15 @@
 # :camera: Instagram Project
 
 Instagram Clone Coding
+![스크린샷, 2021-08-08 15-56-31](https://user-images.githubusercontent.com/58512335/128623746-ba84fe94-fe9a-46dc-8039-09aca711429e.png)
 
 
 ## :page_facing_up: Description
-Django와 API를 이해하고, 전체적인 backand를 공부하기 위해 만든 프로젝트이다.<br>
+Django와 전체적인 backend개발을 공부하기 위한 프로젝트이다.
+REST API를 활용하여 프론트와 백엔드의 완전한 분리를 가능하게 했으며  
+실제 데이터들로 프론트까지 완성하였다.  
+
+
 다음과 같은 기능들이 존재한다.
 ~~~
 1. 회원가입
@@ -30,8 +35,9 @@ Django와 API를 이해하고, 전체적인 backand를 공부하기 위해 만�
 
 
 ## :mag: Issue
-* serializer가 직렬화 이외의 데이터를 터치하는게 싫어서 순전한 직렬화 기능만 작동하도록 해보았다.<br>
-이 과정에서 cerberus라는 라이브러리를 사용하여 validate하도록 만들었다.
+*  django manager만이 DB에 접근할 수 있도록 기존의 serializer를 custom하였다. 이 과정을 통해 validator library인 cerberus 이용하여 유효성 검사를 진행했다.  
+*  추후에 AWS를 이용한 배포까지 진행할 예정이다.
+
 ---
 
 
