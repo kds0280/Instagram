@@ -1,3 +1,4 @@
+from django.http import QueryDict
 from rest_framework import generics
 from rest_framework.response import Response
 from my_validator import check_validation
@@ -8,7 +9,11 @@ class CreateAPIViewWithoutSerializer(generics.CreateAPIView):
     class_to_create_object = None
 
     def create(self, request, *args, **kwargs):
-        data = request.data.dict()
+        if isinstance(request.data, QueryDict):
+            #Post의 create, User의 Create에서 QueryDict로 받는 데이터를 처리하기 위
+            data = request.data.dict()
+        else:
+            data = request.data
         data_is_valid = check_validation(self.schema, **data)
         instance = self.create_instance(request, **data_is_valid)
         serializer = self.serialize_instance(instance)
