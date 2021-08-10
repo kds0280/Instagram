@@ -7,7 +7,7 @@ Instagram Clone Coding
 ## :page_facing_up: Description
 Django와 전체적인 backend개발을 공부하기 위한 프로젝트이다.  
 REST API를 활용하여 프론트와 백엔드의 완전한 분리를 가능하게 했으며  
-실제 데이터들로 프론트까지 완성하였다.  
+실제 데이터들로 Django Template을 이용해 프론트까지 완성하였다.  
 
 
 다음과 같은 기능들이 존재한다.
