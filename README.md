@@ -30,7 +30,7 @@ REST API를 활용하여 프론트와 백엔드의 완전한 분리를 가능하
 * Django
 * DRF
 * Cerberus
-* mySQL
+* SQLite
 * bootstrap
 
 
