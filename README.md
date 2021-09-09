@@ -1,6 +1,6 @@
 # :camera: Instagram Project
 
-Instagram Clone Coding
+Instagram
 ![스크린샷, 2021-08-08 15-56-31](https://user-images.githubusercontent.com/58512335/128623746-ba84fe94-fe9a-46dc-8039-09aca711429e.png)
 
 
