@@ -38,10 +38,3 @@ REST API를 활용하여 프론트와 백엔드의 완전한 분리를 가능하
 *  django manager만이 DB에 접근할 수 있도록 기존의 serializer를 custom하였다. 이 과정을 통해 validator library인 cerberus 이용하여 유효성 검사를 진행했다.  
 *  추후에 AWS를 이용한 배포까지 진행할 예정이다.
 
----
-
-
-# :package: Installation
-
-
-
