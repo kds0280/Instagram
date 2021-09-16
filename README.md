@@ -21,7 +21,7 @@ REST API를 활용하여 프론트와 백엔드의 완전한 분리를 가능하
 7. User Search
 8. Post list 정렬
 9. Post CRUD
-10. 댓글 CD
+10. 댓글, 대댓글
 11. 좋아요
 ~~~
 
