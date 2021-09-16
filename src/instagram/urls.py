@@ -8,12 +8,12 @@ from user.views import Login, SignUp, UserUpdate, UserFollow, UserProfile, Searc
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('search', Search.as_view()),
+    path('search', Search.as_view(), name='search'),
     path('post', PostListCreate.as_view()),
     path('post/<int:post_id>', PostDetailUpdateDelete.as_view()),
-    path('post/<int:post_id>/like', PostLike.as_view()),
-    path('auth', Login.as_view()),
-    path('signup', SignUp.as_view()),
+    path('post/<int:post_id>/like', PostLike.as_view(), name='likepost'),
+    path('auth', Login.as_view(), name='login'),
+    path('signup', SignUp.as_view(), name='signup'),
     path('user/<int:user_id>', UserUpdate.as_view()),
     path('user/<int:user_id>/detail', UserProfile.as_view()),
     path('user/<int:user_id>/follow', UserFollow.as_view()),

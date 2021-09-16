@@ -2,18 +2,22 @@ from rest_framework import exceptions, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from my_validator import check_validation
-from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer
+from base_api import CreateAPIViewWithoutSerializer, UpdateAPIViewWithoutSerializer, RetriveAPIViewForDictionary
 from user.models import User
 from user.permissions import IsUserMineOrReadOnly
 from user.serializers import SignUpSerializer, UserUpdateSerializer, UserProfileSerializer, SearchSerializer
 
 
 class Login(APIView):
-    def post(self, request):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'user/login.html'
+
+    def post(self, request, *args, **kwargs):
         schema = {'username': {'type': 'string', 'empty': False},
                   'password': {'type': 'string', 'empty': False}}
         data = request.data.dict()
@@ -21,13 +25,22 @@ class Login(APIView):
 
         user = get_object_or_404(User, username=data['username'])
         if user.check_password(data['password']):
+            # 유저에게 토큰이 없다면 생성
             token, created = Token.objects.get_or_create(user_id=user.id)
-            return Response(token.key)
+            return Response({'token': token.key})
         else:
             raise exceptions.ValidationError('비밀번호가 틀렸습니다.')
 
+    def get(self, request, *args, **kwargs):
+        """
+        get으로 요쳥시 template사용하기 위함
+        """
+        return Response()
+
 
 class SignUp(CreateAPIViewWithoutSerializer):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'user/sign_up.html'
     schema = {'username': {'type': 'string', 'maxlength': 150, 'empty': False},
               'password': {'type': 'string', 'maxlength': 128, 'empty': False},
               'phone_number': {'type': 'string', 'maxlength': 13, 'empty': False},
@@ -38,11 +51,17 @@ class SignUp(CreateAPIViewWithoutSerializer):
     class_to_create_object = User
     serializer_class = SignUpSerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        get으로 요쳥시 template사용하기 위함
+        """
+        return Response()
+
 
 class UserUpdate(UpdateAPIViewWithoutSerializer):
-    schema = {'phone_number': {'type': 'string', 'maxlength': 13, 'empty': False},
+    schema = {'phone_number': {'type': 'string', 'maxlength': 13},
               'email': {'type': 'string', 'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-                        'maxlength': 254, 'empty': False},
+                        'maxlength': 254},
               'description': {'type': 'string'},
               'profile_image': {'type': 'file', 'nullable': True}}
     queryset = User.objects.all()
@@ -50,6 +69,7 @@ class UserUpdate(UpdateAPIViewWithoutSerializer):
     lookup_field = 'id'
     serializer_class = UserUpdateSerializer
     permission_classes = (
+        # request의 user와 객체의 user가 같은지 확인
         IsUserMineOrReadOnly,
     )
 
@@ -70,7 +90,9 @@ class UserFollow(UpdateAPIViewWithoutSerializer):
             return Response(result)
 
 
-class UserProfile(generics.RetrieveAPIView):
+class UserProfile(RetriveAPIViewForDictionary):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'user/user_profile.html'
     queryset = User.objects.all()
     lookup_url_kwarg = 'user_id'
     lookup_field = 'id'

@@ -36,7 +36,7 @@ class UpdateAPIViewWithoutSerializer(generics.UpdateAPIView):
             setattr(instance, key, value)
         instance.save()
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        return Response({'serializer': serializer.data})
 
     def partial_update(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -51,7 +51,11 @@ class RetriveAPIViewForDictionary(generics.RetrieveAPIView):
         serializer = self.get_serializer(instance)
         return Response({'serializer': serializer.data})
 
+
 class ListAPIViewforDictionary(generics.ListAPIView):
+    """
+    템플릿에 데이터를 전송해주기 위한 Dictionary 변환 API
+    """
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
